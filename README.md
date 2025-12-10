@@ -68,7 +68,7 @@ cd parallelhttp
 ### ▶️ Option A — Run the UI with Docker
 
 ```shell
-docker run --rm -p 8080:8080 -it nmicle/parallelhttp
+docker run --rm -p 8080:8080 -it nicumicle/parallelhttp
 ```
 
 Open in browser:
