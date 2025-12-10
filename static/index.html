@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ParallelHTTP</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    rel="stylesheet" 
+  />
+  <link href="style.css" rel="stylesheet" />
+</head>
+<body class="bg-light text-dark">
+
+  <div class="container py-5">
+    <h1 class="h3 fw-bold mb-2">ParallelHTTP</h1>
+    <p class="text-muted mb-4">
+      Send multiple parallel requests to an endpoint and view each request's status, duration, and summary.
+    </p>
+
+    <!-- Form -->
+    <form id="frm" class="bg-white shadow p-4 rounded-3 mb-4">
+      <div class="row g-3">
+        <div class="col-12">
+          <label class="fw-semibold" for="method">
+            Method
+            <i class="bi bi-info-circle ms-1 text-primary"
+              data-bs-toggle="tooltip"
+              title="HTTP method used for requests.">
+            </i>
+          </label>
+          <select id="method" class="form-select mt-1">
+            <option>GET</option>
+            <option>POST</option>
+            <option>PUT</option>
+            <option>PATCH</option>
+            <option>DELETE</option>
+          </select>
+        </div>
+
+        <div class="col-12">
+          <label class="fw-semibold" for="endpoint">
+            Endpoint
+            <i class="bi bi-info-circle ms-1 text-primary"
+              data-bs-toggle="tooltip"
+              title="The target URL where all requests will be sent.">
+            </i>
+          </label>
+          <input id="endpoint" class="form-control mt-1" placeholder="https://site-to-check.com" required />
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <label class="fw-semibold" for="body">
+          Body (optional JSON)
+          <i class="bi bi-info-circle ms-1 text-primary"
+            data-bs-toggle="tooltip"
+            title='Optional JSON body for POST/PUT/PATCH requests. Must be valid JSON.'>
+          </i>
+        </label>
+        <textarea id="body" rows="4" class="form-control mt-1" placeholder='{"foo":"bar"}'></textarea>
+      </div>
+
+      <div class="mt-3">
+        <label class="fw-semibold" for="headers">
+          Custom Headers (JSON format)
+          <i class="bi bi-info-circle ms-1 text-primary"
+            data-bs-toggle="tooltip"
+            title='Optional HTTP headers in JSON format, e.g. {"Authorization":"Bearer 123"}'>
+          </i>
+        </label>
+        <textarea id="headers" rows="3" class="form-control mt-1" placeholder='{"Authorization":"Bearer token"}'></textarea>
+      </div>
+
+      <!-- Settings -->
+      <div class="border-top pt-4 mt-4">
+        <h2 class="h5 fw-semibold mb-3">⚙️ Settings</h2>
+
+        <div class="row g-3">
+          <div class="col-12 col-sm-4">
+            <label class="form-label">
+              Request Timeout (ms)
+              <i class="bi bi-info-circle ms-1 text-primary"
+                data-bs-toggle="tooltip"
+                title="Maximum wait time for a single request before it is aborted. Set to 0 for unlimited time.">
+              </i>
+            </label>
+            <input id="request_timeout" type="number" value="10000" min="1" class="form-control" />
+          </div>
+
+          <div class="col-12 col-sm-4">
+            <label class="form-label">
+              Max Run Duration (ms)
+              <i class="bi bi-info-circle ms-1 text-primary"
+                data-bs-toggle="tooltip"
+                title="The entire test stops after this time, even if requests are still running. Set to 0 for unlimited time.">
+              </i>
+            </label>
+            <input id="max_duration" type="number" value="30000" min="0" class="form-control" />
+          </div>
+
+          <div class="col-12 col-sm-4">
+            <label class="form-label">
+              Parallel Calls
+              <i class="bi bi-info-circle ms-1 text-primary"
+                data-bs-toggle="tooltip"
+                title="Number of requests executed at the same time.">
+              </i>
+            </label>
+            <input id="parallel" type="number" value="5" min="1" class="form-control" />
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center gap-3 mt-4">
+        <button id="run" class="btn btn-primary fw-semibold px-4">Run</button>
+        <button id="downloadCsv" type="button" class="btn btn-success fw-semibold px-4 d-none">
+          Download CSV
+        </button>
+      </div>
+    </form>
+
+    <div id="status" class="fw-medium"></div>
+
+    <div id="output" class="d-none mt-5">
+      <div id="summary" class="row row-cols-4 g-3 mb-4"></div>
+      <div id="latency" class="row row-cols-3 g-3 mb-4"></div>
+      <div id="results">
+        <h2 class="fw-semibold mt-4 mb-4 h4">Results</h2>
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link active" id="table-tab" data-bs-toggle="tab" data-bs-target="#tab-table" type="button" role="tab" aria-controls="home" aria-selected="true">Table</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" id="json-tab" data-bs-toggle="tab" data-bs-target="#tab-json" type="button" role="tab" aria-controls="json" aria-selected="false">Raw JSON</a>
+          </li>
+        </ul>
+      
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="tab-table" role="tabpanel" aria-labelledby="table-tab">
+            <div id="resultsArea" class="table-responsive"></div>
+          </div>
+          
+          <div class="tab-pane fade show" id="tab-json" role="tabpanel" aria-labelledby="json-tab">
+            <pre id="raw" class="bg-dark text-light p-3 rounded small overflow-auto"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

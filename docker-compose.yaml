@@ -1,0 +1,9 @@
+services:
+  parallelhttp:
+    build: .
+    container_name: parallelhttp
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+    healthcheck:
+      test: "curl http://localhost:8080/health"

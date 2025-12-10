@@ -1,0 +1,17 @@
+version: 2
+
+changelog:
+  use: github
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^ci:'
+      - '^refactor:'
+      
+builds: 
+  - id: "parallelhttp"
+    main: cmd/cli/main.go
+    binary: parallelhttp
+    env:
+      - CGO_ENABLED=0

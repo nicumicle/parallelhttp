@@ -1,0 +1,15 @@
+.tab-content {
+    background-color: #fff;
+    border:1px solid #ccc;
+    padding: 10px;
+}
+.nav-tabs a.nav-link{
+    background-color: #fff;
+    color: #000;
+    border: 1px solid #ccc;
+    border-bottom: none;
+}
+.nav-tabs a.nav-link.active{
+    font-weight: bold;
+    box-shadow: 0 -2px #b6cef1;
+}
