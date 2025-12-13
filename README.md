@@ -74,7 +74,16 @@ docker run --rm -p 8080:8080 -it nicumicle/parallelhttp
 Open in browser:
 👉 [http://localhost:8080](http://localhost:8080)
 
-### ▶️ Option B — Run the UI from Go
+### ▶️ Option B — Run the UI from cli
+
+```shell
+./parallelhttp --serve --port=8080
+```
+
+Open in browser:
+👉 [http://localhost:8080](http://localhost:8080)
+
+### ▶️ Option C — Run the UI from Go
 
 ```shell
 go run cmd/service/main.go
@@ -117,6 +126,8 @@ CLI Flags
   -method string        GET POST PUT PATCH DELETE (default: GET)
   -parallel int         Number of parallel requests (default: 1)
   -timeout duration     Request timeout (default: 10s)
+  -serve bool           Starts the HTTP server
+  -port int             Port for the HTTP Server(default: 8080)
 ```
 
 Example
