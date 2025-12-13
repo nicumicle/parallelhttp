@@ -20,6 +20,7 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
 	var format string
 
 	// Init flags
@@ -42,7 +43,7 @@ func main() {
 
 	// HTTP Server
 	if serve != nil && *serve {
-		if err := runHTTP(*port); err != nil {
+		if err := runHTTP(ctx, *port); err != nil {
 			log.Fatalf("Error: %s", err.Error())
 		}
 
@@ -51,7 +52,7 @@ func main() {
 
 	p := parallelhttp.New(*timeout)
 
-	r, err := p.Run(context.Background(), input)
+	r, err := p.Run(ctx, input)
 	if err != nil {
 		log.Fatalf("[ERROR]: %s\n", err.Error())
 	}
@@ -104,8 +105,8 @@ func main() {
 	}
 }
 
-func runHTTP(port int) error {
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+func runHTTP(ctx context.Context, port int) error {
+	ctx, stop := signal.NotifyContext(ctx, os.Interrupt)
 	defer stop()
 
 	srv := &http.Server{
