@@ -7,7 +7,7 @@ const raw = document.getElementById('raw');
 const resultsArea = document.getElementById('resultsArea');
 const summaryEl = document.getElementById('summary');
 const latencyEl = document.getElementById('latency')
-const url = "http://localhost:8080/run"
+const url =  window.location.origin + "/run"
 
 form.addEventListener('submit', async (ev) => {
     ev.preventDefault();
