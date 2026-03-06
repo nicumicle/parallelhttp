@@ -1,148 +1,154 @@
-# 🚀 ParallelHTTP
+<div align="center">
 
-A lightweight tool for testing APIs by sending multiple **parallel HTTP requests**.
+# ParallelHTTP
 
-It includes:
+**Send parallel HTTP requests. Measure latency. Stress-test your APIs.**
 
-- 💻 **Web UI**  
-- 🐳 **Docker image**  
-- 💼 **CLI mode**  
-- 🧩 **REST API endpoint**
+[![Go Version](https://img.shields.io/badge/go-1.24-00ADD8?logo=go&logoColor=white)](https://go.dev)
+[![Docker Pulls](https://img.shields.io/docker/pulls/nicumicle/parallelhttp)](https://hub.docker.com/r/nicumicle/parallelhttp)
+[![GitHub Release](https://img.shields.io/github/v/release/nicumicle/parallelhttp)](https://github.com/nicumicle/parallelhttp/releases)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 
----
+![Screenshot](./screenshot.png)
 
-## 🛠 Features
-
-- Send multiple parallel HTTP requests  
-- Configure method, endpoint, body, timeout  
-- Track response time & status  
-- Aggregated summary: success/error, avg latency  
-- Export responses to CSV  
-- Web UI for interactive testing  
-- CLI for quick terminal runs  
+</div>
 
 ---
 
-## ⚠️ Disclaimer
+## Overview
 
-This tool is intended **only for testing APIs, servers, and domains that you own or have explicit permission to test**.  
-Running parallel or high-volume requests against systems without authorization may violate:
+ParallelHTTP is a lightweight, zero-dependency tool for load testing and benchmarking HTTP APIs. Configure the number of concurrent requests, method, timeout, and duration — then get back structured results with latency percentiles and per-request status codes.
 
-- Terms of Service  
-- Local or international laws  
-- Computer misuse or anti-fraud regulations  
-- Responsible use and security policies  
-
-> [!IMPORTANT]  
-> By using this tool, **you agree that you are solely responsible for ensuring you have proper authorization** to test the target systems.  
-> The authors and contributors of this project assume **no liability** for any misuse, damage, or legal consequences resulting from unauthorized or unethical use.
->
-> **Use responsibly. Test only what you own.**
+It ships as a single binary, a Docker image, and a Web UI — so you can use whichever fits your workflow.
 
 ---
 
-## 📦 Installation
+## Features
 
-You can use ParallelHTTP via **binary**, **Docker**, **Web UI**, or **CLI**.
+| | |
+|---|---|
+| Parallel requests | Fire N requests simultaneously and collect every response |
+| Latency percentiles | P50, P90, P99 aggregated across all requests |
+| Multiple output formats | `json`, `yaml`, or `text` |
+| Web UI | Visual interface for interactive testing in the browser |
+| CLI | Scriptable, CI-friendly terminal usage |
+| CSV export | Download results directly from the Web UI |
+| Test endpoint | Built-in endpoint that returns random responses for trying things out |
 
-### 1️⃣ Install Using Binaries (Recommended)
+---
 
-Download the latest release from:  
-👉 [**GitHub Releases**](https://github.com/nicumicle/parallelhttp/releases)
+## Quick Start
 
-Run:
+The fastest way to get up and running:
 
 ```bash
+# Run the Web UI with Docker — no installation needed
+docker run --rm -p 8080:8080 nicumicle/parallelhttp
+```
+
+Then open [http://localhost:8080](http://localhost:8080) in your browser.
+
+---
+
+## Installation
+
+### Binary (Recommended)
+
+Download the pre-built binary for your OS from the [Releases page](https://github.com/nicumicle/parallelhttp/releases).
+
+**macOS / Linux:**
+```bash
+# Make it executable
+chmod +x parallelhttp
+
+# Confirm it works
 ./parallelhttp --help
 ```
 
-### 2️⃣ Install From Source
+**Windows:**
+
+Download `parallelhttp.exe` and run it from Command Prompt or PowerShell:
+```powershell
+.\parallelhttp.exe --help
+```
+
+---
+
+### Docker
+
+```bash
+docker run --rm -p 8080:8080 nicumicle/parallelhttp
+```
+
+---
+
+### Build from Source
+
+Requires [Go 1.24+](https://go.dev/dl/).
 
 ```bash
 git clone https://github.com/nicumicle/parallelhttp.git
 cd parallelhttp
+
+# Build the binary
+go build -o parallelhttp ./cmd/cli/main.go
 ```
 
-## 🖥️ Web UI
+---
 
-### ▶️ Option A — Run the UI with Docker
+## Usage
 
-```shell
-docker run --rm -p 8080:8080 -it nicumicle/parallelhttp
-```
+### Web UI
 
-Open in browser:
-👉 [http://localhost:8080](http://localhost:8080)
+Start the server using any of the following methods:
 
-### ▶️ Option B — Run the UI from cli
-
-```shell
+```bash
+# Using the binary
 ./parallelhttp --serve --port=8080
-```
 
-Open in browser:
-👉 [http://localhost:8080](http://localhost:8080)
+# Using Docker
+docker run --rm -p 8080:8080 nicumicle/parallelhttp
 
-### ▶️ Option C — Run the UI from Go
-
-```shell
+# From source
 go run cmd/service/main.go
 ```
 
-This service also provides a testing endpoint:
+Open [http://localhost:8080](http://localhost:8080) in your browser.
 
-Test endpoint (returns random responses)
-👉 [http://localhost:8080/test](http://localhost:8080/test)
+**Results:**
 
-### 📷 Screenshots
+![Results Screenshot](./screenshot-2.png)
 
-![Screenshot](./screenshot.png)
+---
 
-Results:
+### CLI
 
-![Screenshot](./screenshot-2.png)
+Run parallel requests directly from your terminal.
 
-## 💼 CLI Usage
-
-You can run the CLI using the binary or from source.
-
-### ▶️ Option A — CLI Binary
-
-```shell
-./parallelhttp --help
-```
-
-### ▶️ Option B — Run CLI from Source
-
-```shell
-go run cmd/cli/main.go --help
-```
-
-```
-CLI Flags
-  -duration duration    Max duration for all calls. 0 = no limit
-  -endpoint string      Required. Target URL
-  -format string        text | yaml | json (default: json)
-  -method string        GET POST PUT PATCH DELETE (default: GET)
-  -parallel int         Number of parallel requests (default: 1)
-  -timeout duration     Request timeout (default: 10s)
-  -serve bool           Starts the HTTP server
-  -port int             Port for the HTTP Server(default: 8080)
-```
-
-Example
-
-```shell
-go run cmd/cli/main.go \
-  --endpoint=http://localhost:8080/test \
-  --parallel=5 \
+```bash
+./parallelhttp \
+  --endpoint=https://api.example.com/health \
+  --parallel=10 \
   --method=GET \
   --timeout=2s \
-  --duration=10s \
+  --duration=30s \
   --format=json
 ```
 
-Output:
+**Flags:**
+
+| Flag | Required | Description | Default |
+|------|----------|-------------|---------|
+| `--endpoint` | Yes | Target URL | — |
+| `--parallel` | No | Number of concurrent requests | `1` |
+| `--method` | No | HTTP method: `GET` `POST` `PUT` `PATCH` `DELETE` | `GET` |
+| `--timeout` | No | Per-request timeout (e.g. `500ms`, `2s`) | `10s` |
+| `--duration` | No | Total run duration (e.g. `30s`, `5m`). `0` = unlimited | `0` |
+| `--format` | No | Output format: `json` `yaml` `text` | `json` |
+| `--serve` | No | Start the Web UI server | — |
+| `--port` | No | Web UI server port | `8080` |
+
+**Example output (`--format=json`):**
 
 ```json
 {
@@ -150,85 +156,66 @@ Output:
     {
       "response": {
         "status_code": 200,
-        "time": "2025-12-02T04:39:26.450811405+01:00",
+        "time": "2025-12-02T04:39:26.450811Z",
         "duration": 176680135,
-        "duration_h": "176.680135ms"
-      },
-      "error": null,
-      "error_message": null
-    },
-    {
-      "response": {
-        "status_code": 200,
-        "time": "2025-12-02T04:39:26.450838753+01:00",
-        "duration": 177105875,
-        "duration_h": "177.105875ms"
-      },
-      "error": null,
-      "error_message": null
-    },
-    {
-      "response": {
-        "status_code": 200,
-        "time": "2025-12-02T04:39:26.450989804+01:00",
-        "duration": 176999320,
-        "duration_h": "176.99932ms"
-      },
-      "error": null,
-      "error_message": null
-    },
-    {
-      "response": {
-        "status_code": 200,
-        "time": "2025-12-02T04:39:26.450761076+01:00",
-        "duration": 177158817,
-        "duration_h": "177.158817ms"
-      },
-      "error": null,
-      "error_message": null
-    },
-    {
-      "response": {
-        "status_code": 200,
-        "time": "2025-12-02T04:39:26.450879196+01:00",
-        "duration": 179940733,
-        "duration_h": "179.940733ms"
+        "duration_h": "176.68ms"
       },
       "error": null,
       "error_message": null
     }
   ],
   "stats": {
-    "start_time": "2025-12-02T04:39:26.450727731+01:00",
-    "end_time": "2025-12-02T04:39:26.630824982+01:00",
-    "duration": "180.097251ms",
+    "start_time": "2025-12-02T04:39:26.450727Z",
+    "end_time": "2025-12-02T04:39:26.630824Z",
+    "duration": "180.09ms",
     "latency": {
-      "p50": "177.105875ms",
-      "p90": "179.940733ms",
-      "p99": "179.940733ms"
+      "p50": "177.10ms",
+      "p90": "179.94ms",
+      "p99": "179.94ms"
     }
   }
 }
 ```
 
-## 🧩 REST Endpoint
+---
 
-When running the UI service:
+### REST API
 
-```shell
+When the server is running, a built-in test endpoint is available that returns random HTTP responses. It is useful for verifying your setup before pointing the tool at a real API.
+
+```bash
 curl http://localhost:8080/test
 ```
 
-## 🧡 Credits
+---
 
-Built with [Go](https://go.dev/), [Bootstrap](https://getbootstrap.com/), and curiosity.
+## Responsible Use
 
+> [!IMPORTANT]
+> ParallelHTTP is intended **only for testing APIs, servers, and domains you own or have explicit permission to test.**
+>
+> Sending high-volume requests to systems without authorization may violate terms of service, computer misuse laws, or security policies. **The authors assume no liability for any misuse.**
+>
+> Test only what you own.
 
-## 📝 License
+---
 
-Licensed under the MIT License.
-See the full license here: [LICENSE](./LICENSE)
+## Contributing
 
-## ⭐ Support
+Contributions are welcome. Please open an issue to discuss significant changes before submitting a pull request.
 
-If you like this project, give it a ⭐ and share it with your friends!
+---
+
+## License
+
+MIT — see [LICENSE](./LICENSE) for details.
+
+---
+
+<div align="center">
+
+Built with [Go](https://go.dev/) and [Bootstrap](https://getbootstrap.com/).
+
+If you find this useful, give it a ⭐
+
+</div>
