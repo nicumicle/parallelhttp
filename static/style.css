@@ -1,15 +1,95 @@
+/* ==================== Results tab pane ==================== */
 .tab-content {
     background-color: #fff;
-    border:1px solid #ccc;
+    border: 1px solid #ccc;
     padding: 10px;
 }
-.nav-tabs a.nav-link{
+.nav-tabs a.nav-link {
     background-color: #fff;
     color: #000;
     border: 1px solid #ccc;
     border-bottom: none;
 }
-.nav-tabs a.nav-link.active{
+.nav-tabs a.nav-link.active {
     font-weight: bold;
     box-shadow: 0 -2px #b6cef1;
+}
+
+/* ==================== Request tab bar ==================== */
+#requestTabBar .request-tab {
+    cursor: pointer;
+    border: 1px solid #dee2e6;
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    background: #f0f4f8;
+    font-size: 0.875rem;
+    margin-bottom: -2px;
+    transition: background 0.12s;
+    user-select: none;
+    position: relative;
+    z-index: 0;
+    border-bottom: 2px solid #b6cef1;
+}
+
+#requestTabBar .request-tab:hover {
+    background: #e4eaf0;
+}
+
+#requestTabBar .request-tab-active {
+    background: #fff;
+    font-weight: 600;
+    border-color: #b6cef1;
+    border-bottom: 2px solid #fff;
+    z-index: 1;
+}
+
+.request-tab-add {
+    border: 1px dashed #adb5bd;
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+    background: transparent;
+    color: #6c757d;
+    padding: 0.35rem 0.7rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    margin-bottom: -2px;
+    transition: background 0.12s, color 0.12s;
+    position: relative;
+    z-index: 0;
+}
+
+.request-tab-add:hover {
+    background: #e9ecef;
+    color: #343a40;
+}
+
+.tab-close-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    line-height: 1;
+    font-size: 1.1rem;
+    color: #6c757d;
+    cursor: pointer;
+    opacity: 0.55;
+}
+
+.tab-close-btn:hover {
+    opacity: 1;
+    color: #dc3545;
+}
+
+/* ==================== Form connected to tab bar ==================== */
+#frm {
+    border-top: 2px solid #b6cef1;
+    border-radius: 0 6px 6px 6px !important;
+}
+
+/* ==================== History ==================== */
+.history-entry {
+    transition: background-color 0.12s;
+}
+
+.history-entry:hover {
+    background-color: #f8f9fa !important;
 }

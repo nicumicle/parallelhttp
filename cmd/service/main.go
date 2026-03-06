@@ -34,7 +34,7 @@ func run() error {
 
 	srvErr := make(chan error, 1)
 	go func() {
-		log.Printf("Server started at: %d\n", port)
+		log.Printf("Server started at 0.0.0.0:%d\n", port)
 		srvErr <- srv.ListenAndServe()
 	}()
 
